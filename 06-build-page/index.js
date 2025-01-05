@@ -3,8 +3,8 @@ const path = require('path');
 const sourceDir = __dirname;
 const distDir = path.join(__dirname, 'project-dist');
 const templatePath = path.join(sourceDir, 'template.html');
-const styleDir = path.join(sourceDir, 'styles');
-const assetsDir = path.join(sourceDir, 'assets');
+//const styleDir = path.join(sourceDir, 'styles');
+//const assetsDir = path.join(sourceDir, 'assets');
 
 function processTemplate() {
   try {
