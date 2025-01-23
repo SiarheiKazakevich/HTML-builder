@@ -185,7 +185,6 @@ header .container {
 .header-button:active {
   background-color: #8f5515;
 }
-
 main .container {
   padding-top: 120px;
   padding-bottom: 120px;
@@ -360,7 +359,6 @@ main .container {
   border-color: #8f5515;
   outline: 0;
 }
-
 footer {
   background-color: #181617;
 }

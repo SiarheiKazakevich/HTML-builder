@@ -8,9 +8,17 @@ async function copyDir() {
   try {
     await fs.mkdir(targetDir, { recursive: true });
 
-    const files = await fs.readdir(sourceDir);
+    const sourceFiles = await fs.readdir(sourceDir);
+    const targetFiles = await fs.readdir(targetDir);
 
-    for (const file of files) {
+    for (const file of targetFiles) {
+      if (!sourceFiles.includes(file)) {
+        const targetPath = path.join(targetDir, file);
+        await fs.rm(targetPath, { recursive: true, force: true });
+      }
+    }
+
+    for (const file of sourceFiles) {
       const sourcePath = path.join(sourceDir, file);
       const targetPath = path.join(targetDir, file);
 
@@ -22,17 +30,27 @@ async function copyDir() {
         await fs.copyFile(sourcePath, targetPath);
       }
     }
-    console.log('Копирование завершено.');
+
+    console.log('Копирование завершено и синхронизация выполнена.');
   } catch (error) {
     console.error('Произошла ошибка:', error.message);
   }
 }
+
 async function copyDirRecursive(source, target) {
   await fs.mkdir(target, { recursive: true });
 
-  const files = await fs.readdir(source);
+  const sourceFiles = await fs.readdir(source);
+  const targetFiles = await fs.readdir(target);
 
-  for (const file of files) {
+  for (const file of targetFiles) {
+    if (!sourceFiles.includes(file)) {
+      const targetPath = path.join(target, file);
+      await fs.rm(targetPath, { recursive: true, force: true });
+    }
+  }
+
+  for (const file of sourceFiles) {
     const sourcePath = path.join(source, file);
     const targetPath = path.join(target, file);
 
