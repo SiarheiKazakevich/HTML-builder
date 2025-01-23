@@ -1,10 +1,13 @@
-const fs = require('fs');
+const fs = require('fs').promises;
 const path = require('path');
-const sourceDir = __dirname;
-const distDir = path.join(__dirname, 'project-dist');
-const templatePath = path.join(sourceDir, 'template.html');
-//const styleDir = path.join(sourceDir, 'styles');
-//const assetsDir = path.join(sourceDir, 'assets');
+const baseDir = path.join(__dirname, 'project-dist', '06-build-page');
+const assetsSrcDir = path.join(__dirname, 'assets');
+const assetsDestDir = path.join(baseDir, 'assets');
+const stylesDir = path.join(__dirname, 'styles');
+const componentsDir = path.join(__dirname, 'components');
+const templateFile = path.join(__dirname, 'template.html');
+const indexFile = path.join(baseDir, 'index.html');
+const styleFile = path.join(baseDir, 'style.css');
 
 function processTemplate() {
   try {
