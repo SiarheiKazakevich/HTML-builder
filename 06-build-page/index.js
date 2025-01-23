@@ -9,6 +9,27 @@ const templateFile = path.join(__dirname, 'template.html');
 const indexFile = path.join(baseDir, 'index.html');
 const styleFile = path.join(baseDir, 'style.css');
 
+async function copyFolder(srcDir, destDir) {
+  await fs.mkdir(destDir, { recursive: true });
+  const entries = await fs.readdir(srcDir, { withFileTypes: true });
+
+  for (const entry of entries) {
+    const srcPath = path.join(srcDir, entry.name);
+    const destPath = path.join(destDir, entry.name);
+
+    if (entry.isDirectory()) {
+      await copyFolder(srcPath, destPath);
+    } else if (entry.isFile()) {
+      await fs.copyFile(srcPath, destPath);
+    }
+  }
+}
+
+
+
+
+
+
 function processTemplate() {
   try {
     if (!fs.existsSync(distDir)) {
