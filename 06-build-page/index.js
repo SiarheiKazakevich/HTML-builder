@@ -42,7 +42,7 @@ async function mergeStyles() {
 //function for collect HTML-file
 async function buildHtml() {
   let template = await fs.readFile(templateFile, 'utf-8');
-  const componentsTags = template.match(/{{\s*[\w-]+\s*}}/g) || [];
+  const componentTags = template.match(/{{\s*[\w-]+\s*}}/g) || [];
 
   for (const tag of componentTags) {
     const componentName = tag.replace(/{{\s*|\s*}}/g, '');
@@ -57,41 +57,27 @@ async function buildHtml() {
   }
   await fs.writeFile(indexFile, template, 'utf-8');
 }
-
-function processTemplate() {
+//main function for collect
+async function buildProject() {
   try {
-    if (!fs.existsSync(distDir)) {
-      fs.mkdirSync(distDir);
-    }
+    await fs.mkdir(baseDir, { recursive: true });
 
-    let templateContent = fs.readFileSync(templatePath, 'utf-8');
-    const matches = templateContent.match(/{{(.*?)}}/g);
+    //copy assets
+    console.log('Копируем папку assets...');
+    await copyFolder(assetsSrcDir, assetsDestDir);
 
-    if (!matches) {
-      console.error('Не найдены теги в шаблоне.');
-      return;
-    }
-    for (const match of matches) {
-      const componentName = match.slice(2, -2).trim();
-      const componentPath = path.join(
-        sourceDir,
-        'components',
-        `${componentName}.html`,
-      );
-      const componentContent = fs.readFileSync(componentPath, 'utf-8');
+    //collect css files
+    console.log('Собираем стили...');
+    await mergeStyles();
 
-      templateContent = templateContent.replace(match, componentContent);
-    }
-    const indexPath = path.join(distDir, 'index.html');
-    fs.writeFileSync(indexPath, templateContent, 'utf-8');
-    console.log('Обработка шаблона завершена.');
+    //collect Html file
+    console.log('Собираем HTML файл...');
+    await buildHtml();
 
-    require('../05-merge-styles/index');
-
-    require('../04-copy-directory/index');
+    console.log('Проект успешно собран в папке "project-dist/06-build-page"!');
   } catch (error) {
-    console.error('Произошла ошибка:', error.message);
+    console.error('Произошла ошибка при сборке проекта:', error.message);
   }
 }
 
-processTemplate();
+buildProject();
