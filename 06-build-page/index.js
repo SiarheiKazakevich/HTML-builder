@@ -25,7 +25,19 @@ async function copyFolder(srcDir, destDir) {
   }
 }
 
-
+//function for collect styles
+async function mergeStyles() {
+  const files = await fs.readdir(stylesDir, { withFileTypes: true });
+  const cssFiles = files.filter(
+    (file) => file.isFile() && path.extname(file.name) === '.css',
+  );
+  const styles = await Promise.all(
+    cssFiles.map((file) =>
+      fs.readFile(path.join(stylesDir, file.name), 'utf-8'),
+    ),
+  );
+  await fs.writeFile(styleFile, styles.join('\n'), 'utf-8');
+}
 
 
 
